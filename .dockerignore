@@ -1,0 +1,6 @@
+./node_modules/**
+.git/**
+.gitignore
+**/*.ts
+**/*.lock
+!module/openfaas.d.ts

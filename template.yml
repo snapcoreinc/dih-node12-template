@@ -1,0 +1,3 @@
+name: node14-http
+entrypoint: node --nouse-idle-notification --expose-gc index.js
+imagePullPolicy: IfNotPresent
