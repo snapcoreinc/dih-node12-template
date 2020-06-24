@@ -24,6 +24,8 @@ RUN apk add --no-cache nodejs-current tini \
     && mkdir -p /home/app/node_modules \
     && mkdir -p /home/app/module
 
+USER app
+
 WORKDIR /home/app/
 
 # Move the code in place
@@ -43,8 +45,3 @@ ENV max_inflight="0"
 HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["fwatchdog"]
-
-# User changes are kept to the last stage to speed up staged build
-COPY --chown=app:app --from=build /home/app/module/ /home/app/module/
-
-USER app
