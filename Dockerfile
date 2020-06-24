@@ -1,32 +1,28 @@
 
-FROM node:14.3.0-alpine3.11 as build
+FROM node:14.4.0-alpine3.12 as build
 
 WORKDIR /home/app
 
-RUN mkdir -p /home/app/function
+RUN mkdir -p /home/app/module
 COPY package.json index.js ./
-COPY function/ ./function/
+COPY module/ ./module/
 
-RUN echo '//npm.snapcore.com:4873/:_authToken=1T9z3hkWbdxtyiYPqJtj8efFwCq' > `npm config get userconfig` \
-    && echo '@snapcore:registry=https://npm.snapcore.com/' >> `npm config get userconfig` \
-    && npm install --no-package-lock --production
+# RUN echo '//npm.snapcore.com:4873/:_authToken=1T9z3hkWbdxtyiYPqJtj8efFwCq' > `npm config get userconfig` \
+#     && echo '@snapcore:registry=https://npm.snapcore.com/' >> `npm config get userconfig` \
+RUN npm install --no-package-lock --production
 
-# COPY function node packages and install, adding this as a separate
+# COPY module node packages and install, adding this as a separate
 # entry allows caching of npm install
-WORKDIR /home/app/function
+WORKDIR /home/app/module
 RUN npm install --no-package-lock --production
 
 ##### SHIP IMAGE #####
-FROM openfaas/of-watchdog:0.7.7 as watchdog
-FROM alpine:3.11 as ship
 
-COPY --from=watchdog /fwatchdog /usr/bin/fwatchdog
-RUN apk add --no-cache nodejs-current tini\
-    && chmod 777 /tmp \
-    && chmod +x /usr/bin/fwatchdog \
-    && addgroup -S app && adduser -S -g app app \
+FROM docker.snapcore.com/dih-base-image:latest as ship
+
+RUN apk add --no-cache nodejs-current tini \
     && mkdir -p /home/app/node_modules \
-    && mkdir -p /home/app/function
+    && mkdir -p /home/app/module
 
 WORKDIR /home/app/
 
@@ -49,6 +45,6 @@ ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["fwatchdog"]
 
 # User changes are kept to the last stage to speed up staged build
-COPY --chown=app:app --from=build /home/app/function/ /home/app/function/
+COPY --chown=app:app --from=build /home/app/module/ /home/app/module/
 
 USER app
