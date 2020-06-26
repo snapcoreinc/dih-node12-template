@@ -35,13 +35,13 @@ COPY --chown=app:app --from=build /home/app/index.js /home/app/package.json /hom
 
 
 ENV function_process="node --nouse-idle-notification --expose-gc index.js" \
+    gc_interval="30000" \
     mode="http" \
     http_upstream_url="http://127.0.0.1:3000" \
     http_buffer_req_body="false" \
     exec_timeout="10s" \
     write_timeout="15s" \
     read_timeout="15s" \
-    gc_interval="30000" \
     max_inflight="0"
 
 HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
