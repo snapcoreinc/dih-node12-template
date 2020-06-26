@@ -16,7 +16,7 @@ export async function handler(event: FnEvent, context: FnContext, callback?: FnC
   const result: FnResult = {
     statusCode: 200,
     body: {
-      status: "Hello world from SnapCore's DIH: " + JSON.stringify(event.body),
+      status: "HelloWorld from SnapCore's DIH!  event.body: " + JSON.stringify(event.body),
     },
   }
 
