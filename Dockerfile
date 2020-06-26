@@ -33,6 +33,7 @@ WORKDIR /home/app/
 COPY --chown=app:app --from=build /home/app/node_modules /home/app/node_modules
 COPY --chown=app:app --from=build /home/app/index.js /home/app/package.json /home/app/
 
+
 ENV function_process="node --nouse-idle-notification --expose-gc index.js" \
     mode="http" \
     http_upstream_url="http://127.0.0.1:3000" \
@@ -46,3 +47,6 @@ ENV function_process="node --nouse-idle-notification --expose-gc index.js" \
 HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["fwatchdog"]
+
+# Leaves the changes to the end to leverage multistage
+COPY --chown=app:app --from=build /home/app/module /home/app/module
