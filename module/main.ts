@@ -1,6 +1,6 @@
 //import { FnEvent, FnContext, FnResult, FnCallback } from "@snapcore/snapcore-types"
 
-import { FnEvent, FnContext, FnResult, FnCallback } from "./snapcore-dih"
+import { FnEvent, FnContext, FnResult, FnCallback } from "@snapcore/snapcore-dih-types"
 
 /**
  * Function's handler, note that it's an async function

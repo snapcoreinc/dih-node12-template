@@ -16,6 +16,7 @@
     "stoppable": "^1.1.0"
   },
   "devDependencies": {
+    "@snapcore/snapcore-dih-types": "^1.0.5",
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.2",
     "@types/stoppable": "^1.1.0"

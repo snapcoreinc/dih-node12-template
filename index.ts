@@ -9,7 +9,7 @@ import { StoppableServer } from "stoppable"
 import stoppable = require("stoppable")
 
 import { handler, init, shutdown, ready } from "./module/main"
-import { FnContext, FnEvent, FnHandlerFile, FnResult } from "./typings/snapcore-dih"
+import { FnContext, FnEvent, FnHandlerFile, FnResult } from "@snapcore/snapcore-dih-types"
 
 //catchErrors([closeResources])
 
@@ -53,6 +53,7 @@ class FunctionEvent implements FnEvent {
   path: any
   pathParameters: { [name: string]: string } | null
   requestContext: { requestId: string }
+  isBase64Encoded: boolean
 
   constructor(req: Request) {
     this.body = req.body
@@ -61,6 +62,9 @@ class FunctionEvent implements FnEvent {
     this.httpMethod = req.method
     this.queryStringParameters = req.query
     this.path = req.path
+
+    //TODO: check body with  ^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$
+    // this.isBase64Encoded = match
   }
 }
 

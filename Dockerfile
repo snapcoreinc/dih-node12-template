@@ -33,20 +33,19 @@ WORKDIR /home/app/
 COPY --chown=app:app --from=build /home/app/node_modules /home/app/node_modules
 COPY --chown=app:app --from=build /home/app/index.js /home/app/package.json /home/app/
 
-
-ENV function_process="node --nouse-idle-notification --expose-gc index.js" \
+ENV startup_process="node --nouse-idle-notification --expose-gc index.js" \
     gc_interval="30000" \
     mode="http" \
-    http_upstream_url="http://127.0.0.1:3000" \
+    proxy_url="http://127.0.0.1:3000" \
     http_buffer_req_body="false" \
     exec_timeout="10s" \
     write_timeout="15s" \
     read_timeout="15s" \
-    max_inflight="0"
+    concurrent_req="0"
 
 HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["fwatchdog"]
+CMD ["dih-monitor"]
 
 # Leaves the changes to the end to leverage multistage
 COPY --chown=app:app --from=build /home/app/module /home/app/module

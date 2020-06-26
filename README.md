@@ -1,27 +1,27 @@
 # OpenFaaS Node12 Express V2
 
--   AWS like handler management
--   Super tiny docker image by using multistage build, down to 65MB from 118MB!
--   Garbage collector manually triggered every 30s to optimize processing
--   Handles function life-cycle (init, ready, stop) and graceful shutdown
--   Catch all uncaught exceptions and unhandled promise rejections
--   Async/Away ready
--   Typescript ready, _openfaas.d.ts_ provided
--   Run in service mode - 1 process per pod, multiple http req
+- AWS like handler management
+- Super tiny docker image by using multistage build, down to 65MB from 118MB!
+- Garbage collector manually triggered every 30s to optimize processing
+- Handles function life-cycle (init, ready, stop) and graceful shutdown
+- Catch all uncaught exceptions and unhandled promise rejections
+- Async/Away ready
+- Typescript ready, _openfaas.d.ts_ provided
+- Run in service mode - 1 process per pod, multiple http req
 
 ## Why Serveless & Openfaas?
 
--   Short lived
--   No ports, can be invoke multiple ways
--   No state
--   Single purpose
--   Easy to manage
--   Scale-to-zero
--   Horizontal scale-out
--   Centralized metrics & logs
--   Automated health-checks
--   Sane Kubernates defaults like running as a non-root user
--   Sync & async call patterns
+- Short lived
+- No ports, can be invoke multiple ways
+- No state
+- Single purpose
+- Easy to manage
+- Scale-to-zero
+- Horizontal scale-out
+- Centralized metrics & logs
+- Automated health-checks
+- Sane Kubernates defaults like running as a non-root user
+- Sync & async call patterns
 
 ## Trying the template
 
@@ -58,20 +58,20 @@ For instance, the following example is an http event:
 
 ```json
 {
-    "httpMethod": "GET",
-    "path": "/functions/helloworld",
-    "queryStringParameters": {
-        "query": "Olivier"
-    },
-    "headers": {
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-        "accept-encoding": "gzip",
-        "accept-language": "en-US,en;q=0.9",
-        "connection": "keep-alive",
-        "host": "myhost.snoopy.com",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
-    },
-    "body": ""
+  "httpMethod": "GET",
+  "path": "/functions/helloworld",
+  "queryStringParameters": {
+    "query": "Olivier"
+  },
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    "accept-encoding": "gzip",
+    "accept-language": "en-US,en;q=0.9",
+    "connection": "keep-alive",
+    "host": "myhost.snoopy.com",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+  },
+  "body": ""
 }
 ```
 
@@ -79,16 +79,16 @@ Which may return the following result:
 
 ```json
 {
-    "statusCode": 200,
-    "path": "/functions/example",
-    "headers": {
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-        "accept-encoding": "gzip",
-        "accept-language": "en-US,en;q=0.9",
-        "connection": "keep-alive",
-        "host": "myhost.snoopy.com"
-    },
-    "body": "Hello: Olivier"
+  "statusCode": 200,
+  "path": "/functions/example",
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    "accept-encoding": "gzip",
+    "accept-language": "en-US,en;q=0.9",
+    "connection": "keep-alive",
+    "host": "myhost.snoopy.com"
+  },
+  "body": "Hello: Olivier"
 }
 ```
 
@@ -97,9 +97,9 @@ Which may return the following result:
 The function processing is implemented by an **async** function named **handler**
 
 ```javascript
-exports.handler = async function(event, context) {
-    console.log('EVENT: \n' + JSON.stringify(event, null, 2))
-    return context.logStreamName
+exports.handler = async function (event, context) {
+  console.log("EVENT: \n" + JSON.stringify(event, null, 2))
+  return context.logStreamName
 }
 ```
 
@@ -110,29 +110,29 @@ Each Client that integrates with a Function sends data as a JSON event. The stru
 Legacy, non async handlers are also supported, but they require the use of a callback to notify results.
 
 ```javascript
-exports.handler = function(event, context, callback) {
-    try {
-        callback(null, event.operandA + event.operandB)
-    } catch (err) {
-        callback(err)
-    }
+exports.handler = function (event, context, callback) {
+  try {
+    callback(null, event.operandA + event.operandB)
+  } catch (err) {
+    callback(err)
+  }
 }
 ```
 
 Teh following highlights how promises can be used with a callback
 
 ```javascript
-const https = require('https')
-let url = 'https://docs.aws.amazon.com/lambda/latest/dg/welcome.html'
+const https = require("https")
+let url = "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html"
 
-exports.handler = function(event, context, callback) {
-    https
-        .get(url, res => {
-            callback(null, res.statusCode)
-        })
-        .on('error', e => {
-            callback(Error(e))
-        })
+exports.handler = function (event, context, callback) {
+  https
+    .get(url, (res) => {
+      callback(null, res.statusCode)
+    })
+    .on("error", (e) => {
+      callback(Error(e))
+    })
 }
 ```
 
@@ -141,11 +141,11 @@ exports.handler = function(event, context, callback) {
 Using console logging is becoming
 
 ```javascript
-exports.handler = async function(event, context) {
-    console.log('ENVIRONMENT VARIABLES\n' + JSON.stringify(process.env, null, 2))
-    console.info('EVENT\n' + JSON.stringify(event, null, 2))
-    console.warn('Event not processed.')
-    return context.logStreamName
+exports.handler = async function (event, context) {
+  console.log("ENVIRONMENT VARIABLES\n" + JSON.stringify(process.env, null, 2))
+  console.info("EVENT\n" + JSON.stringify(event, null, 2))
+  console.warn("Event not processed.")
+  return context.logStreamName
 }
 ```
 
@@ -167,17 +167,17 @@ Errors, are function's output prime citizens
 
 ```json
 {
-    "statusCode": 500,
-    "body": {
-        "errorType": "ReferenceError",
-        "errorMessage": "x is not defined",
-        "trace": [
-            "ReferenceError: x is not defined",
-            "    at Runtime.exports.handler (/var/task/index.js:2:3)",
-            "    at Runtime.handleOnce (/var/runtime/Runtime.js:63:25)",
-            "    at process._tickCallback (internal/process/next_tick.js:68:7)"
-        ]
-    }
+  "statusCode": 500,
+  "body": {
+    "errorType": "ReferenceError",
+    "errorMessage": "x is not defined",
+    "trace": [
+      "ReferenceError: x is not defined",
+      "    at Runtime.exports.handler (/var/task/index.js:2:3)",
+      "    at Runtime.handleOnce (/var/runtime/Runtime.js:63:25)",
+      "    at process._tickCallback (internal/process/next_tick.js:68:7)"
+    ]
+  }
 }
 ```
 
@@ -200,16 +200,12 @@ Typescript compilation is purposely left on the host to speed up image generatio
 
 install and build using:
 
--   brew install node
--   npm install typescript ts-node
--   npm login --registry=https://npm.snapcore.com --scope=@snapcore
--   make
+- brew install node
+- npm install typescript ts-node
+- npm login --registry=https://npm.snapcore.com --scope=@snapcore
+- make
 
 Ensure that the build happens properly, then push the code to the git repo
-
-### TODO
-
--   When Docker 17.09 is generally available, consider using COPY --chown=app:app to save further image size
 
 ## Recommendations
 

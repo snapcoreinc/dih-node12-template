@@ -1,4 +1,4 @@
-import { FnEvent, FnContext, FnResult } from "../snapcore-dih"
+import { FnEvent, FnContext, FnResult } from "@snapcore/snapcore-dih-types"
 
 /**
  * This sample shows how to handle a long running process using Promises
