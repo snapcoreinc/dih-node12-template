@@ -1,6 +1,4 @@
 build
 package-lock.json
 node_modules/
-*.js
 !index.js
-package-json.lock
