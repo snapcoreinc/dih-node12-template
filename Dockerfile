@@ -1,9 +1,10 @@
 
 FROM node:14.4.0-alpine3.12 as build
 
+RUN mkdir -p /home/app/module
+
 WORKDIR /home/app
 
-RUN mkdir -p /home/app/module
 COPY package.json index.js ./
 COPY module/ ./module/
 
@@ -32,15 +33,15 @@ WORKDIR /home/app/
 COPY --chown=app:app --from=build /home/app/node_modules /home/app/node_modules
 COPY --chown=app:app --from=build /home/app/index.js /home/app/package.json /home/app/
 
-ENV function_process="node --nouse-idle-notification --expose-gc index.js"
-ENV mode="http"
-ENV http_upstream_url="http://127.0.0.1:3000"
-ENV http_buffer_req_body="false"
-ENV exec_timeout="10s"
-ENV write_timeout="15s"
-ENV read_timeout="15s"
-ENV gc_interval="30000"
-ENV max_inflight="0"
+ENV function_process="node --nouse-idle-notification --expose-gc index.js" \
+    mode="http" \
+    http_upstream_url="http://127.0.0.1:3000" \
+    http_buffer_req_body="false" \
+    exec_timeout="10s" \
+    write_timeout="15s" \
+    read_timeout="15s" \
+    gc_interval="30000" \
+    max_inflight="0"
 
 HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
 ENTRYPOINT ["/sbin/tini", "--"]
