@@ -199,7 +199,7 @@ async function allIsGood() {
 
 // setup metrics & health
 app.get("/metrics", middleware.express.prometheusMetrics())
-app.get("/_/health", middleware.express.healthCheck([allIsGood]))
+// app.get("/_/health", middleware.express.healthCheck([allIsGood]))
 
 app.post("/*", fnHandler)
 app.get("/*", fnHandler)
