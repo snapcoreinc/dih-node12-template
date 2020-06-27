@@ -23,6 +23,13 @@
 - Sane Kubernates defaults like running as a non-root user
 - Sync & async call patterns
 
+## Healthcheck
+
+Add an annotation of the from
+
+com.snapcore.health.http.path
+com.snapcore.health.http.initialDelay
+
 ## Trying the template
 
 ```shell

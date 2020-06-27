@@ -192,6 +192,15 @@ const fnHandler = (req: Request, res: Response) => {
   }
 }
 
+async function allIsGood() {
+  // implement this function to check the health of the service. For instance you can check on a DB or REST service status
+  return true
+}
+
+// setup metrics & health
+app.get("/metrics", middleware.express.prometheusMetrics())
+app.get("/_/health", middleware.express.healthCheck([allIsGood]))
+
 app.post("/*", fnHandler)
 app.get("/*", fnHandler)
 app.patch("/*", fnHandler)
