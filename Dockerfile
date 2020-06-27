@@ -19,7 +19,7 @@ RUN npm install --no-package-lock --production
 
 ##### SHIP IMAGE #####
 
-FROM docker.snapcore.com/dih-base-image:latest as ship
+FROM registry.gitlab.com/snapcoreinc/dih-base-image:latest as ship
 
 RUN apk add --no-cache nodejs-current tini \
     && mkdir -p /home/app/node_modules \
@@ -44,8 +44,7 @@ ENV startup_process="node --nouse-idle-notification --expose-gc index.js" \
     concurrent_req="0"
 
 HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
-ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["dih-monitor"]
+ENTRYPOINT ["/sbin/tini", "/usr/bin/dih-monitor"]
 
 # Leaves the changes to the end to leverage multistage
 COPY --chown=app:app --from=build /home/app/module /home/app/module
