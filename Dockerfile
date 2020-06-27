@@ -41,6 +41,7 @@ ENV startup_process="node --nouse-idle-notification --expose-gc index.js" \
     exec_timeout="10s" \
     write_timeout="15s" \
     read_timeout="15s" \
+    suppress_lock="true" \
     concurrent_req="0"
 
 HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
