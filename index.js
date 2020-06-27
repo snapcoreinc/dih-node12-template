@@ -121,6 +121,11 @@ const fnHandler = (req, res) => {
     else {
     }
 };
+async function allIsGood() {
+    return true;
+}
+app.get("/metrics", service_tools_1.middleware.express.prometheusMetrics());
+app.get("/_/health", service_tools_1.middleware.express.healthCheck([allIsGood]));
 app.post("/*", fnHandler);
 app.get("/*", fnHandler);
 app.patch("/*", fnHandler);
